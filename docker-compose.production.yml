@@ -1,6 +1,7 @@
 version: '3'
 
 volumes:
+
   pg_data_kittygram:
   static_kittygram:
   media_kittygram:
@@ -13,7 +14,7 @@ services:
       - pg_data_kittygram:/var/lib/postgresql/data
 
   backend:
-    build: ./backend/
+    image: khamaran/kittygram_backend
     env_file: .env
     volumes:
       - static_kittygram:/backend_static
@@ -22,16 +23,16 @@ services:
       - db_kittygram
 
   frontend:
+    image: khamaran/kittygram_frontend
     env_file: .env
-    build: ./frontend/
     command: cp -r /app/build/. /frontend_static/
     volumes:
       - static_kittygram:/frontend_static
     depends_on:
-        - backend
+      - backend
 
   gateway:
-    build: ./nginx/
+    image: khamaran/kittygram_gateway
     env_file: .env
     volumes:
       - static_kittygram:/staticfiles
